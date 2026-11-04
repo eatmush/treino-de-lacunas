@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script>try{const t=localStorage.getItem("lac-theme");if(t==="dark")document.documentElement.dataset.theme="dark";}catch(e){}</script>
+<script>(function(){let t=null;try{t=localStorage.getItem("lac-theme");}catch(e){}if(t!=="dark"&&t!=="light")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";if(t==="dark")document.documentElement.dataset.theme="dark";})();</script>
 <style>
 :root{
   --paper:#a8cdf6; --card:#f7f6ea; --ink:#16192a; --muted:#3a4a63;
@@ -490,10 +490,17 @@ function themeLabel(){
 }
 themeBtn.onclick=()=>{
   const t=curTheme()==="dark"?"light":"dark";
-  document.documentElement.dataset.theme=t;
+  if(t==="dark") document.documentElement.dataset.theme="dark"; else delete document.documentElement.dataset.theme;
   try{localStorage.setItem("lac-theme",t);}catch(e){}
   themeLabel();
 };
+// sem escolha salva, acompanha o sistema se ele mudar com a página aberta
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",e=>{
+  let saved=null;try{saved=localStorage.getItem("lac-theme");}catch(_){}
+  if(saved==="dark"||saved==="light") return;
+  if(e.matches) document.documentElement.dataset.theme="dark"; else delete document.documentElement.dataset.theme;
+  themeLabel();
+});
 themeLabel();
 </script>
 <!-- Vercel Speed Insights (só funciona no site publicado no Vercel) -->
