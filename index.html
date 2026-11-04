@@ -133,47 +133,34 @@ button:focus-visible,.pill:focus-visible,summary:focus-visible{outline:3px solid
   <p class="credit">Feito por <a href="https://github.com/eatmush" target="_blank" rel="noopener">Matheus Castella</a></p>
 </main>
 
-<script type="text/plain" id="default-md">A **window function** in SQL performs a calculation across a set of rows that are related to the current row, without collapsing those rows into one. That last part is what makes it different from a regular aggregate.
+<script type="text/plain" id="default-md"># A curva do esquecimento
 
-With `GROUP BY`, if you ask for the average salary per department, you get one row per department and lose the individual employee rows. With a window function, you can keep every employee row *and* show their department's average next to it.
+Em 1885, o psicólogo alemão **Hermann Ebbinghaus** publicou um estudo feito em si mesmo. Ele decorava listas de sílabas sem sentido, como "DAX" e "BOK", e media quanto ainda lembrava depois de algum tempo.
 
-```sql
-SELECT
-  name,
-  department,
-  salary,
-  AVG(salary) OVER (PARTITION BY department) AS dept_avg
-FROM employees;
-```
+O resultado ficou conhecido como **curva do esquecimento**: a maior parte do que se aprende se perde nas primeiras horas e dias, e depois o esquecimento fica mais lento.
 
-| name  | department | salary | dept_avg |
-|-------|------------|--------|----------|
-| Ana   | Sales      | 5000   | 6000     |
-| Bruno | Sales      | 7000   | 6000     |
-| Carla | IT         | 8000   | 8500     |
-| Diego | IT         | 9000   | 8500     |
+## Repetição espaçada
 
-The `OVER (...)` clause defines the "window", meaning which rows each calculation looks at. It has three optional parts. `PARTITION BY` splits rows into groups, like `GROUP BY` but without merging them. `ORDER BY` sets the order within each partition, which matters for rankings and running totals. A frame clause (e.g. `ROWS BETWEEN 2 PRECEDING AND CURRENT ROW`) narrows the window to a sliding range of rows around the current one.
+Ebbinghaus também percebeu que revisar ajuda mais quando as revisões são distribuídas no tempo do que quando ficam todas no mesmo dia. Isso é chamado de **efeito de espaçamento**.
 
-Some common uses:
+Um exemplo de calendário de revisão:
 
-```sql
--- Rank employees by salary within each department
-RANK() OVER (PARTITION BY department ORDER BY salary DESC)
+| Revisão | Quando |
+|---------|--------|
+| 1ª | no dia seguinte |
+| 2ª | três dias depois |
+| 3ª | uma semana depois |
+| 4ª | um mês depois |
 
--- Running total of sales by date
-SUM(amount) OVER (ORDER BY sale_date)
+## Lembrar é treinar
 
--- Compare each month to the previous one
-LAG(revenue) OVER (ORDER BY month)
+Pesquisas mais recentes mostram que tentar lembrar uma informação sem olhar fixa mais do que reler. É o chamado **efeito de testagem**, ou **prática de recuperação**.
 
--- 3-day moving average
-AVG(price) OVER (ORDER BY day ROWS BETWEEN 2 PRECEDING AND CURRENT ROW)
-```
+Por isso este treino esconde palavras em vez de destacá-las:
 
-Window functions fall into three rough families: aggregates used as windows (`SUM`, `AVG`, `COUNT`, `MIN`, `MAX`), ranking functions (`ROW_NUMBER`, `RANK`, `DENSE_RANK`, `NTILE`), and offset functions that reach into other rows (`LAG`, `LEAD`, `FIRST_VALUE`, `LAST_VALUE`).
-
-A useful way to picture it: for each row, the database looks through a "window" at a set of neighboring rows, computes something from them, and writes the result into that row, while every row stays in the output.</script>
+- reler dá a sensação de que você já sabe;
+- preencher uma lacuna mostra se você sabe mesmo;
+- errar e ver a resposta certa logo em seguida também ajuda a fixar.</script>
 
 <script>
 const DEFAULT_MD=document.getElementById("default-md").textContent;
