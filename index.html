@@ -8,11 +8,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try{const t=localStorage.getItem("lac-theme");if(t==="dark"||t==="light")document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style>
 :root{
-  --paper:#eef3f7; --card:#ffffff; --ink:#1d2b3a; --muted:#5d6f80;
-  --rule:#c9d8e6; --margin:#e5a3a3; --hl:#fff1a8; --ok:#2f7d4f; --okbg:#e2f3e8;
-  --bad:#b23b3b; --badbg:#f9e3e3; --btn:#1d2b3a; --btntext:#fff; --codebg:#f3f7fa; --cmt:#6b7f90;
+  --paper:#a8cdf6; --card:#f7f6ea; --ink:#16192a; --muted:#3a4a63;
+  --rule:#d8dac8; --margin:#ff2a14; --hl:#d6e7fb; --ok:#1d7246; --okbg:#dcefdc;
+  --bad:#a8150b; --badbg:#ffddd6; --btn:#e01e0a; --btntext:#fff; --codebg:#eeeedf; --cmt:#5e6575;
+  --accent:#e01e0a; --accenttext:#fff;
   color-scheme:light;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -20,23 +22,30 @@
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --paper:#121a22; --card:#1a2530; --ink:#e3ebf2; --muted:#9db0c1;
-    --rule:#2a3a4a; --margin:#7a3c3c; --hl:#5a4f1a; --ok:#7fd3a0; --okbg:#1d3a2a;
-    --bad:#f09a9a; --badbg:#4a2323; --btn:#e3ebf2; --btntext:#121a22; --codebg:#15202a; --cmt:#8ea2b4;
+    --paper:#0c1626; --card:#16233a; --ink:#f2f0e1; --muted:#a3b6cf;
+    --rule:#2b3c58; --margin:#ff4a30; --hl:#22385c; --ok:#7fd3a0; --okbg:#173326;
+    --bad:#ff8f7d; --badbg:#4a1d17; --btn:#ff4a30; --btntext:#0c1626; --codebg:#111d31; --cmt:#8ea2b4;
+    --accent:#ff4a30; --accenttext:#0c1626;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#121a22; --card:#1a2530; --ink:#e3ebf2; --muted:#9db0c1;
-  --rule:#2a3a4a; --margin:#7a3c3c; --hl:#5a4f1a; --ok:#7fd3a0; --okbg:#1d3a2a;
-  --bad:#f09a9a; --badbg:#4a2323; --btn:#e3ebf2; --btntext:#121a22; --codebg:#15202a; --cmt:#8ea2b4;
+  --paper:#0c1626; --card:#16233a; --ink:#f2f0e1; --muted:#a3b6cf;
+  --rule:#2b3c58; --margin:#ff4a30; --hl:#22385c; --ok:#7fd3a0; --okbg:#173326;
+  --bad:#ff8f7d; --badbg:#4a1d17; --btn:#ff4a30; --btntext:#0c1626; --codebg:#111d31; --cmt:#8ea2b4;
+  --accent:#ff4a30; --accenttext:#0c1626;
   color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--paper);color:var(--ink);
   font-family:"Literata",Georgia,"Times New Roman",serif;font-size:1.05rem;line-height:1.85}
-main{max-width:48rem;margin:0 auto;padding:2rem 1.1rem 3rem}
+main{position:relative;max-width:48rem;margin:0 auto;padding:2rem 1.1rem 3rem}
+.theme{position:absolute;top:2.15rem;right:1.1rem;font:inherit;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.78rem;
+  background:var(--card);color:var(--ink);border:1.5px solid var(--rule);border-radius:999px;padding:.2rem .75rem;cursor:pointer}
+.theme:hover{border-color:var(--accent)}
+.theme:focus-visible{outline:3px solid var(--margin);outline-offset:2px}
+h1{padding-right:9rem}
 .credit{margin-top:2.5rem;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.8rem;color:var(--muted)}
 .credit a{color:inherit;text-decoration:none;border-bottom:1px solid var(--rule)}
 .credit a:hover{color:var(--ink);border-color:var(--ink)}
@@ -55,7 +64,7 @@ textarea:focus{outline:2px solid var(--ink);outline-offset:1px}
 .row[hidden]{display:none}
 .pill{font:inherit;font-size:.88rem;border:1.5px solid var(--rule);background:var(--card);color:var(--ink);
   border-radius:999px;padding:.15rem .75rem;cursor:pointer;max-width:16rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pill[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pill[aria-pressed="true"]{background:var(--accent);color:var(--accenttext);border-color:var(--accent)}
 .card{position:relative;background:var(--card);border-radius:6px;margin-top:1rem;
   padding:1.6rem 1.4rem 1.6rem 2.6rem;box-shadow:0 1px 0 var(--rule)}
 .card::before{content:"";position:absolute;left:1.6rem;top:0;bottom:0;width:2px;background:var(--margin)}
@@ -91,7 +100,7 @@ input.blank.bad{background:var(--badbg);border-color:var(--bad);color:var(--bad)
 .actions{display:flex;gap:.6rem;flex-wrap:wrap;margin:1.3rem 0 .8rem}
 button.main,button.ghost{font:inherit;font-size:.95rem;border-radius:6px;padding:.5rem 1rem;cursor:pointer}
 button.main{background:var(--btn);color:var(--btntext);border:2px solid var(--btn)}
-button.ghost{background:transparent;color:var(--ink);border:2px solid var(--rule)}
+button.ghost{background:var(--card);color:var(--ink);border:2px solid var(--rule)}
 button:focus-visible,.pill:focus-visible,summary:focus-visible{outline:3px solid var(--margin);outline-offset:2px}
 .status{min-height:1.6em;font-size:.98rem}
 .status strong{font-weight:600}
@@ -101,6 +110,7 @@ button:focus-visible,.pill:focus-visible,summary:focus-visible{outline:3px solid
 </head>
 <body>
 <main>
+  <button class="theme" id="theme" type="button"></button>
   <h1>Treino de lacunas</h1>
   <p class="sub">Cole um texto em Markdown, escolha um nível e preencha as lacunas. A cada rodada as palavras escondidas mudam, sempre na porcentagem do nível. No modo <b>Termos-chave</b>, só entram as palavras em negrito e em `código`.</p>
 
@@ -478,6 +488,23 @@ document.getElementById("check").onclick=check;
 document.getElementById("reveal").onclick=reveal;
 document.getElementById("next").onclick=render;
 load(md);render();
+
+/* ---------- tema claro / escuro ---------- */
+const themeBtn=document.getElementById("theme"), darkMQ=matchMedia("(prefers-color-scheme: dark)");
+const curTheme=()=>document.documentElement.dataset.theme||(darkMQ.matches?"dark":"light");
+function themeLabel(){
+  const dark=curTheme()==="dark";
+  themeBtn.textContent=dark?"☀ Modo claro":"☾ Modo escuro";
+  themeBtn.setAttribute("aria-label",dark?"Mudar para o modo claro":"Mudar para o modo escuro");
+}
+themeBtn.onclick=()=>{
+  const t=curTheme()==="dark"?"light":"dark";
+  document.documentElement.dataset.theme=t;
+  try{localStorage.setItem("lac-theme",t);}catch(e){}
+  themeLabel();
+};
+darkMQ.addEventListener("change",themeLabel);
+themeLabel();
 </script>
 <!-- Vercel Speed Insights (só funciona no site publicado no Vercel) -->
 <script>
