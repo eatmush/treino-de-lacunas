@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Treino de lacunas</title>
+<meta name="description" content="Cole um texto em Markdown e preencha as lacunas para decorar. A cada rodada, as palavras escondidas mudam.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#eef3f7; --card:#ffffff; --ink:#1d2b3a; --muted:#5d6f80;
+  --rule:#c9d8e6; --margin:#e5a3a3; --hl:#fff1a8; --ok:#2f7d4f; --okbg:#e2f3e8;
+  --bad:#b23b3b; --badbg:#f9e3e3; --btn:#1d2b3a; --btntext:#fff; --codebg:#f3f7fa; --cmt:#6b7f90;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#121a22; --card:#1a2530; --ink:#e3ebf2; --muted:#9db0c1;
+    --rule:#2a3a4a; --margin:#7a3c3c; --hl:#5a4f1a; --ok:#7fd3a0; --okbg:#1d3a2a;
+    --bad:#f09a9a; --badbg:#4a2323; --btn:#e3ebf2; --btntext:#121a22; --codebg:#15202a; --cmt:#8ea2b4;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121a22; --card:#1a2530; --ink:#e3ebf2; --muted:#9db0c1;
+  --rule:#2a3a4a; --margin:#7a3c3c; --hl:#5a4f1a; --ok:#7fd3a0; --okbg:#1d3a2a;
+  --bad:#f09a9a; --badbg:#4a2323; --btn:#e3ebf2; --btntext:#121a22; --codebg:#15202a; --cmt:#8ea2b4;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Literata",Georgia,"Times New Roman",serif;font-size:1.05rem;line-height:1.85}
+main{max-width:48rem;margin:0 auto;padding:2rem 1.1rem 3rem}
+.credit{margin-top:2.5rem;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.8rem;color:var(--muted)}
+.credit a{color:inherit;text-decoration:none;border-bottom:1px solid var(--rule)}
+.credit a:hover{color:var(--ink);border-color:var(--ink)}
+h1{font-size:1.6rem;font-weight:600;margin:0 0 .25rem;line-height:1.25}
+.sub{color:var(--muted);margin:0 0 1.2rem;font-size:.95rem}
+details.editor{background:var(--card);border:1.5px solid var(--rule);border-radius:6px;padding:.5rem .9rem;margin-bottom:1.2rem}
+details.editor summary{cursor:pointer;font-weight:600;font-size:.95rem}
+details.editor p{margin:.4rem 0;color:var(--muted);font-size:.88rem;line-height:1.5}
+textarea{width:100%;min-height:16rem;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.85rem;line-height:1.5;
+  color:var(--ink);background:var(--codebg);border:1px solid var(--rule);border-radius:4px;padding:.7rem;resize:vertical}
+textarea:focus{outline:2px solid var(--ink);outline-offset:1px}
+.edit-actions{display:flex;gap:.6rem;flex-wrap:wrap;margin:.6rem 0 .3rem;align-items:center}
+.edit-msg{font-size:.88rem;color:var(--bad)}
+.row{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.7rem;align-items:center}
+.row > span{color:var(--muted);font-size:.9rem;margin-right:.3rem;min-width:3.5rem}
+.row[hidden]{display:none}
+.pill{font:inherit;font-size:.88rem;border:1.5px solid var(--rule);background:var(--card);color:var(--ink);
+  border-radius:999px;padding:.15rem .75rem;cursor:pointer;max-width:16rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.card{position:relative;background:var(--card);border-radius:6px;margin-top:1rem;
+  padding:1.6rem 1.4rem 1.6rem 2.6rem;box-shadow:0 1px 0 var(--rule)}
+.card::before{content:"";position:absolute;left:1.6rem;top:0;bottom:0;width:2px;background:var(--margin)}
+.card > *{margin:0 0 1.2rem}
+.card > *:last-child{margin-bottom:0}
+.card h2{font-size:1.25rem;font-weight:600;line-height:1.4}
+.card h3{font-size:1.08rem;font-weight:600;line-height:1.4}
+.card ul,.card ol{padding-left:1.4rem}
+.card blockquote{border-left:3px solid var(--rule);padding-left:.9rem;color:var(--muted);margin-left:0}
+.code,code,pre,table{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+.code,code{font-size:.88em}
+.wrap{overflow-x:auto;max-width:100%}
+pre{background:var(--codebg);border:1px solid var(--rule);border-radius:4px;padding:.8rem 1rem;
+  font-size:.88rem;line-height:2.05;white-space:pre;margin:0}
+pre .cmt{color:var(--cmt);font-style:italic}
+table{border-collapse:collapse;font-size:.88rem;line-height:1.9}
+th,td{border-bottom:1px solid var(--rule);padding:.15rem .9rem .15rem 0;text-align:left;white-space:nowrap}
+th{font-weight:500}
+b{font-weight:600}
+input.blank{font:inherit;color:var(--ink);background:var(--hl);border:none;border-bottom:2px solid var(--ink);
+  border-radius:3px 3px 0 0;padding:0 .15em;margin:0;text-align:center;line-height:1.35;font-style:normal}
+pre input.blank,table input.blank,input.blank.code{font-family:"IBM Plex Mono",ui-monospace,monospace}
+input.blank:focus{outline:2px solid var(--ink);outline-offset:1px}
+input.blank.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+input.blank.bad{background:var(--badbg);border-color:var(--bad);color:var(--bad)}
+.fix{color:var(--ok);font-size:.85em;font-weight:600;margin-left:.15em;font-style:normal}
+.hint{position:fixed;z-index:20;pointer-events:none;background:var(--ink);color:var(--paper);
+  border-radius:5px;padding:.25rem .6rem;font-size:.85rem;line-height:1.4;white-space:nowrap;
+  transform:translate(-50%,-100%);opacity:0;transition:opacity .12s}
+.hint.on{opacity:1}
+.hint .pat{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;letter-spacing:.18em;margin-right:.5em}
+@media (prefers-reduced-motion:reduce){.hint{transition:none}}
+.actions{display:flex;gap:.6rem;flex-wrap:wrap;margin:1.3rem 0 .8rem}
+button.main,button.ghost{font:inherit;font-size:.95rem;border-radius:6px;padding:.5rem 1rem;cursor:pointer}
+button.main{background:var(--btn);color:var(--btntext);border:2px solid var(--btn)}
+button.ghost{background:transparent;color:var(--ink);border:2px solid var(--rule)}
+button:focus-visible,.pill:focus-visible,summary:focus-visible{outline:3px solid var(--margin);outline-offset:2px}
+.status{min-height:1.6em;font-size:.98rem}
+.status strong{font-weight:600}
+.tip{color:var(--muted);font-size:.85rem;margin-top:1.5rem}
+@media (max-width:480px){.card{padding:1.3rem 1rem 1.3rem 2.1rem}.card::before{left:1.2rem}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Treino de lacunas</h1>
+  <p class="sub">Cole um texto em Markdown, escolha um nível e preencha as lacunas. A cada rodada as palavras escondidas mudam, sempre na porcentagem do nível. No modo <b>Termos-chave</b>, só entram as palavras em negrito e em `código`.</p>
+
+  <details class="editor" id="editor">
+    <summary>Texto para decorar</summary>
+    <p>Aceita parágrafos, **negrito**, *itálico*, `código`, blocos ``` de código, tabelas com |, listas, citações com &gt; e títulos com #. Títulos dividem o texto em trechos; sem títulos, ele é dividido em partes de tamanho parecido. Para o modo Termos-chave, marque os termos com **negrito** ou `código` (blocos ``` ficam de fora).</p>
+    <textarea id="src" spellcheck="false" aria-label="Texto em Markdown"></textarea>
+    <div class="edit-actions">
+      <button class="main" id="use">Usar este texto</button>
+      <button class="ghost" id="restore">Restaurar exemplo</button>
+      <span class="edit-msg" id="editmsg" aria-live="polite"></span>
+    </div>
+  </details>
+
+  <div class="row" role="group" aria-label="Trecho" id="sections"></div>
+  <div class="row" role="group" aria-label="Lacunas" id="modes"><span>Lacunas</span></div>
+  <div class="row" role="group" aria-label="Nível" id="levels"><span>Nível</span></div>
+
+  <div class="card" id="card"></div>
+
+  <div class="actions">
+    <button class="main" id="check">Verificar</button>
+    <button class="ghost" id="reveal">Mostrar respostas</button>
+    <button class="ghost" id="next">Nova rodada</button>
+  </div>
+  <div class="status" id="status" aria-live="polite"></div>
+  <p class="tip">Passe o mouse sobre uma lacuna para ver a inicial e o tamanho · Enter verifica · Tab pula para a próxima lacuna · maiúsculas e pontuação não contam; acentos contam.</p>
+  <!-- TODO: quando o site pessoal estiver no ar, apontar o crédito para ele -->
+  <p class="credit">Feito por <a href="https://github.com/eatmush" target="_blank" rel="noopener">Matheus Castella</a></p>
+</main>
+
+<script type="text/plain" id="default-md">A **window function** in SQL performs a calculation across a set of rows that are related to the current row, without collapsing those rows into one. That last part is what makes it different from a regular aggregate.
+
+With `GROUP BY`, if you ask for the average salary per department, you get one row per department and lose the individual employee rows. With a window function, you can keep every employee row *and* show their department's average next to it.
+
+```sql
+SELECT
+  name,
+  department,
+  salary,
+  AVG(salary) OVER (PARTITION BY department) AS dept_avg
+FROM employees;
+```
+
+| name  | department | salary | dept_avg |
+|-------|------------|--------|----------|
+| Ana   | Sales      | 5000   | 6000     |
+| Bruno | Sales      | 7000   | 6000     |
+| Carla | IT         | 8000   | 8500     |
+| Diego | IT         | 9000   | 8500     |
+
+The `OVER (...)` clause defines the "window", meaning which rows each calculation looks at. It has three optional parts. `PARTITION BY` splits rows into groups, like `GROUP BY` but without merging them. `ORDER BY` sets the order within each partition, which matters for rankings and running totals. A frame clause (e.g. `ROWS BETWEEN 2 PRECEDING AND CURRENT ROW`) narrows the window to a sliding range of rows around the current one.
+
+Some common uses:
+
+```sql
+-- Rank employees by salary within each department
+RANK() OVER (PARTITION BY department ORDER BY salary DESC)
+
+-- Running total of sales by date
+SUM(amount) OVER (ORDER BY sale_date)
+
+-- Compare each month to the previous one
+LAG(revenue) OVER (ORDER BY month)
+
+-- 3-day moving average
+AVG(price) OVER (ORDER BY day ROWS BETWEEN 2 PRECEDING AND CURRENT ROW)
+```
+
+Window functions fall into three rough families: aggregates used as windows (`SUM`, `AVG`, `COUNT`, `MIN`, `MAX`), ranking functions (`ROW_NUMBER`, `RANK`, `DENSE_RANK`, `NTILE`), and offset functions that reach into other rows (`LAG`, `LEAD`, `FIRST_VALUE`, `LAST_VALUE`).
+
+A useful way to picture it: for each row, the database looks through a "window" at a set of neighboring rows, computes something from them, and writes the result into that row, while every row stays in the output.</script>
+
+<script>
+const DEFAULT_MD=document.getElementById("default-md").textContent;
+const LEVELS=[[0.10,"1 · 10%"],[0.25,"2 · 25%"],[0.45,"3 · 45%"],[0.70,"4 · 70%"],[1.0,"5 · tudo"]];
+const CHUNK_WORDS=70;
+
+const MODES=[["random","Aleatórias"],["key","Termos-chave"]];
+let md=DEFAULT_MD, level=0, section=-1, mode="random", blocks=[], sections=[], blanks=[];
+try{
+  const t=localStorage.getItem("lac-text"); if(t) md=t;
+  const l=localStorage.getItem("lac-level"); if(l!==null) level=Math.min(4,Math.max(0,+l||0));
+  const s=localStorage.getItem("lac-section"); if(s!==null) section=+s||0;
+  const m=localStorage.getItem("lac-mode"); if(m==="key"||m==="random") mode=m;
+}catch(e){}
+function save(){try{localStorage.setItem("lac-text",md);localStorage.setItem("lac-level",level);localStorage.setItem("lac-section",section);localStorage.setItem("lac-mode",mode);}catch(e){}}
+
+/* ---------- tokenizing ---------- */
+const WORD=/[\p{L}\p{N}_]+(?:[’'-][\p{L}\p{N}_]+)*/gu;
+function pieces(text,st){
+  const out=[];let last=0,m;WORD.lastIndex=0;
+  while((m=WORD.exec(text))){
+    if(m.index>last) out.push({k:"s",t:text.slice(last,m.index),st});
+    out.push({k:"w",t:m[0],st}); last=WORD.lastIndex;
+  }
+  if(last<text.length) out.push({k:"s",t:text.slice(last),st});
+  return out;
+}
+function smart(t){ // typographic quotes for prose
+  return t.replace(/(^|[\s(\[{])"/g,"$1“").replace(/"/g,"”").replace(/(\p{L})'(\p{L})/gu,"$1’$2").replace(/(^|[\s(\[{])'/g,"$1‘").replace(/'/g,"’");
+}
+function inline(text){
+  const out=[];
+  text.split(/(\*\*[^*]+\*\*|__[^_]+__|`[^`]+`|\*[^*\s][^*]*\*|\[[^\]]+\]\([^)]*\))/).forEach(part=>{
+    if(!part) return;
+    if(part.startsWith("**")||part.startsWith("__")) out.push(...pieces(smart(part.slice(2,-2)),"b"));
+    else if(part.startsWith("`")) out.push(...pieces(part.slice(1,-1),"code"));
+    else if(part.startsWith("*")) out.push(...pieces(smart(part.slice(1,-1)),"i"));
+    else if(part.startsWith("[")) out.push(...pieces(smart(part.match(/^\[([^\]]+)\]/)[1]),""));
+    else out.push(...pieces(smart(part),""));
+  });
+  return out;
+}
+function codePieces(text){
+  const out=[];
+  text.split("\n").forEach((line,i)=>{
+    if(i) out.push({k:"s",t:"\n",st:""});
+    const t=line.trim();
+    out.push(...pieces(line,(t.startsWith("--")||t.startsWith("//")||t.startsWith("#"))?"cmt":""));
+  });
+  return out;
+}
+
+/* ---------- markdown parsing ---------- */
+const isFence=l=>/^\s*(```|~~~)/.test(l);
+const isHead=l=>/^\s{0,3}#{1,6}\s+\S/.test(l);
+const isTable=l=>/^\s*\|/.test(l);
+const isList=l=>/^\s*([-*+]|\d+[.)])\s+/.test(l);
+const isQuote=l=>/^\s*>/.test(l);
+const splitRow=l=>l.trim().replace(/^\|/,"").replace(/\|$/,"").split("|").map(c=>c.trim());
+function parse(src){
+  const lines=src.replace(/\r\n?/g,"\n").split("\n"), out=[];
+  let i=0;
+  while(i<lines.length){
+    const l=lines[i];
+    if(!l.trim()){i++;continue;}
+    if(isFence(l)){
+      const fence=l.trim().slice(0,3), body=[]; i++;
+      while(i<lines.length&&!lines[i].trim().startsWith(fence)){body.push(lines[i]);i++;}
+      i++; out.push({type:"pre",pc:codePieces(body.join("\n"))}); continue;
+    }
+    if(isHead(l)){
+      const m=l.trim().match(/^(#{1,6})\s+(.*?)\s*#*$/);
+      out.push({type:"h",lvl:m[1].length,title:m[2],pc:inline(m[2])}); i++; continue;
+    }
+    if(isTable(l)){
+      const rows=[];
+      while(i<lines.length&&isTable(lines[i])){
+        const cells=splitRow(lines[i]);
+        if(!cells.every(c=>/^:?-{2,}:?$/.test(c))) rows.push(cells.map(c=>inline(c)));
+        i++;
+      }
+      out.push({type:"table",cells:rows}); continue;
+    }
+    if(isList(l)){
+      const ordered=/^\s*\d/.test(l), items=[];
+      while(i<lines.length&&lines[i].trim()&&!isFence(lines[i])&&!isHead(lines[i])){
+        if(isList(lines[i])) items.push(lines[i].replace(/^\s*([-*+]|\d+[.)])\s+/,""));
+        else if(items.length) items[items.length-1]+=" "+lines[i].trim();
+        i++;
+      }
+      out.push({type:ordered?"ol":"ul",items:items.map(inline)}); continue;
+    }
+    if(isQuote(l)){
+      const buf=[];
+      while(i<lines.length&&isQuote(lines[i])){buf.push(lines[i].replace(/^\s*>\s?/,""));i++;}
+      out.push({type:"quote",pc:inline(buf.join(" ").trim())}); continue;
+    }
+    const buf=[];
+    while(i<lines.length&&lines[i].trim()&&!isFence(lines[i])&&!isHead(lines[i])&&!isTable(lines[i])&&!isList(lines[i])&&!isQuote(lines[i])){
+      buf.push(lines[i].trim());i++;
+    }
+    out.push({type:"p",pc:inline(buf.join(" "))});
+  }
+  return out;
+}
+function words(b){
+  const c=pcs=>pcs.filter(p=>p.k==="w").length;
+  if(b.cells) return b.cells.flat().reduce((n,x)=>n+c(x),0);
+  if(b.items) return b.items.reduce((n,x)=>n+c(x),0);
+  return c(b.pc);
+}
+// one flag per word, in render order: true = key term (bold or inline code, not code blocks)
+function wordFlags(b){
+  const f=pcs=>pcs.filter(p=>p.k==="w").map(p=>b.type!=="pre"&&(p.st==="b"||p.st==="code"));
+  if(b.cells) return b.cells.flat().flatMap(f);
+  if(b.items) return b.items.flatMap(f);
+  return f(b.pc);
+}
+function buildSections(bs){
+  const secs=[];
+  if(bs.some(b=>b.type==="h")){
+    let cur=null;
+    bs.forEach(b=>{
+      if(b.type==="h"||!cur){cur={name:b.type==="h"?b.title.replace(/[*`_]/g,""):"Início",blocks:[]};secs.push(cur);}
+      cur.blocks.push(b);
+    });
+  }else{
+    let cur=null,n=0;
+    bs.forEach(b=>{
+      const w=words(b);
+      if(!cur||(n>0&&(n>=CHUNK_WORDS||n+w>CHUNK_WORDS*1.4))){
+        const next={blocks:[]},last=cur&&cur.blocks.at(-1);
+        // a short intro line ("Some common uses:") moves along with the block it introduces
+        if(last&&cur.blocks.length>1&&last.type==="p"&&words(last)<12){cur.blocks.pop();next.blocks.push(last);n=words(last);}
+        else n=0;
+        cur=next;secs.push(cur);
+      }
+      cur.blocks.push(b);n+=w;
+    });
+    secs.forEach((s,i)=>s.name="Parte "+(i+1));
+  }
+  return secs;
+}
+
+/* ---------- rendering ---------- */
+const norm=s=>s.normalize("NFC").toLowerCase().replace(/[’‘']/g,"'").replace(/[^\p{L}\p{N}_'\- ]/gu,"").replace(/\s+/g," ").trim();
+const TAG={b:"b",i:"i",code:"code",cmt:"span"};
+function renderPieces(container,pcs,set,counter,inCode){
+  pcs.forEach(p=>{
+    const id=p.k==="w"?counter.n++:-1;
+    let node;
+    if(p.k==="w"&&set.has(id)){
+      node=document.createElement("input");
+      node.className="blank"+(p.st==="code"||inCode?" code":"");
+      node.autocomplete="off";node.autocapitalize="off";node.spellcheck=false;
+      node.setAttribute("aria-label","lacuna "+(blanks.length+1));
+      node.style.width=(Math.max([...p.t].length,2)+1.4)+"ch";
+      node.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();check();}});
+      node.addEventListener("input",()=>node.classList.remove("ok","bad"));
+      node.addEventListener("mouseenter",()=>showHint(node,p.t));
+      node.addEventListener("mouseleave",hideHint);
+      blanks.push({inp:node,word:p.t});
+    }else node=document.createTextNode(p.t);
+    if(p.st&&TAG[p.st]){
+      const w=document.createElement(TAG[p.st]);
+      if(p.st==="cmt") w.className="cmt";
+      w.appendChild(node);node=w;
+    }
+    container.appendChild(node);
+  });
+}
+function renderBlock(card,b,set,counter){
+  const el=t=>document.createElement(t);
+  if(b.type==="p"||b.type==="quote"||b.type==="h"){
+    const n=el(b.type==="p"?"p":b.type==="quote"?"blockquote":(b.lvl<=2?"h2":"h3"));
+    renderPieces(n,b.pc,set,counter,false);card.appendChild(n);
+  }else if(b.type==="ul"||b.type==="ol"){
+    const n=el(b.type);
+    b.items.forEach(it=>{const li=el("li");renderPieces(li,it,set,counter,false);n.appendChild(li);});
+    card.appendChild(n);
+  }else if(b.type==="pre"){
+    const w=el("div");w.className="wrap";const pre=el("pre");
+    renderPieces(pre,b.pc,set,counter,true);w.appendChild(pre);card.appendChild(w);
+  }else{
+    const w=el("div");w.className="wrap";const t=el("table");
+    b.cells.forEach((row,ri)=>{
+      const tr=el("tr");
+      row.forEach(c=>{const cell=el(ri?"td":"th");renderPieces(cell,c,set,counter,true);tr.appendChild(cell);});
+      t.appendChild(tr);
+    });
+    w.appendChild(t);card.appendChild(w);
+  }
+}
+/* ---------- hover hint: first letter + length ---------- */
+const hintEl=document.createElement("div");hintEl.className="hint";hintEl.setAttribute("role","tooltip");
+document.body.appendChild(hintEl);
+function showHint(inp,word){
+  const chars=[...word];
+  const pat=chars.map((c,i)=>i===0?c:(/[\p{L}\p{N}]/u.test(c)?"_":c)).join("");
+  const n=chars.filter(c=>/[\p{L}\p{N}]/u.test(c)).length;
+  const unit=chars.every(c=>/\p{L}/u.test(c))?(n===1?"letra":"letras"):(n===1?"caractere":"caracteres");
+  hintEl.innerHTML="";
+  const s=document.createElement("span");s.className="pat";s.textContent=pat;
+  hintEl.append(s,`${n} ${unit}`);
+  const r=inp.getBoundingClientRect();
+  const half=hintEl.offsetWidth/2+8;
+  hintEl.style.left=Math.min(window.innerWidth-half,Math.max(half,r.left+r.width/2))+"px";
+  hintEl.style.top=(r.top-6)+"px";
+  hintEl.classList.add("on");
+}
+function hideHint(){hintEl.classList.remove("on");}
+window.addEventListener("scroll",hideHint,{passive:true});
+
+function buildControls(){
+  const sr=document.getElementById("sections");sr.innerHTML="<span>Trecho</span>";
+  sr.hidden=sections.length<2;
+  [["Tudo",-1],...sections.map((s,i)=>[s.name,i])].forEach(([n,v])=>{
+    const b=document.createElement("button");b.className="pill";b.textContent=n;b.title=n;b.dataset.v=v;
+    b.onclick=()=>{section=v;save();render();};sr.appendChild(b);
+  });
+}
+function render(){
+  if(section>=sections.length||sections.length<2) section=-1;
+  document.querySelectorAll("#levels .pill").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.v===level));
+  document.querySelectorAll("#modes .pill").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===mode));
+  document.querySelectorAll("#sections .pill").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.v===section));
+  const shown=section<0?blocks:sections[section].blocks;
+  const flags=shown.flatMap(wordFlags);
+  const total=flags.length;
+  let ids=[...Array(total).keys()], keyOnly=false, noKeys=false;
+  if(mode==="key"){
+    const k=ids.filter(i=>flags[i]);
+    if(k.length){ids=k;keyOnly=true;} else noKeys=total>0;
+  }
+  for(let i=ids.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]];}
+  const set=new Set(ids.slice(0,ids.length?Math.max(1,Math.round(ids.length*LEVELS[level][0])):0));
+  blanks=[];hideHint();
+  const card=document.getElementById("card");card.innerHTML="";
+  const counter={n:0};
+  shown.forEach(b=>renderBlock(card,b,set,counter));
+  const st=document.getElementById("status");
+  st.textContent=!total?"Não há texto para treinar. Abra “Texto para decorar” e cole o seu."
+    :keyOnly?`${blanks.length} lacunas de ${ids.length} palavras-chave nesta rodada (${total} palavras no trecho).`
+    :`${blanks.length} lacunas de ${total} palavras nesta rodada.`+(noKeys?" Este trecho não tem termos em negrito nem em `código`, então o sorteio é aleatório.":"");
+  if(blanks[0]) blanks[0].inp.focus({preventScroll:true});
+}
+function clearFixes(){document.querySelectorAll(".fix").forEach(f=>f.remove());}
+function check(){
+  clearFixes();
+  let ok=0;
+  blanks.forEach(({inp,word})=>{
+    const right=norm(inp.value)===norm(word);
+    inp.classList.toggle("ok",right);inp.classList.toggle("bad",!right);
+    if(right) ok++;
+  });
+  const st=document.getElementById("status");
+  if(ok===blanks.length){
+    if(level<4){
+      st.innerHTML=`<strong>Tudo certo (${ok}/${blanks.length}).</strong> Faça mais uma rodada neste nível ou suba para o nível ${level+2}. `;
+      const b=document.createElement("button");b.className="main";b.textContent=`Subir para o nível ${level+2}`;
+      b.onclick=()=>{level++;save();render();};st.appendChild(b);
+    }else st.innerHTML="<strong>Tudo certo, de memória.</strong> Repita amanhã para fixar.";
+  }else{
+    st.innerHTML=`<strong>${ok} de ${blanks.length} certas.</strong> Corrija as vermelhas e verifique de novo, ou mostre as respostas.`;
+    const first=blanks.find(b=>b.inp.classList.contains("bad"));if(first) first.inp.focus();
+  }
+}
+function reveal(){
+  clearFixes();
+  blanks.forEach(({inp,word})=>{
+    if(norm(inp.value)!==norm(word)){
+      inp.classList.add("bad");
+      const s=document.createElement("span");s.className="fix";s.textContent=word;inp.after(s);
+    }else inp.classList.add("ok");
+  });
+  document.getElementById("status").textContent="Respostas em verde ao lado das lacunas. Clique em Nova rodada para tentar de novo.";
+}
+function load(text){
+  md=text;blocks=parse(md);sections=buildSections(blocks);buildControls();
+}
+
+/* ---------- wiring ---------- */
+const src=document.getElementById("src"), msg=document.getElementById("editmsg");
+src.value=md;
+document.getElementById("use").onclick=()=>{
+  const t=src.value.trim();
+  if(!t){msg.textContent="Cole algum texto antes de usar.";return;}
+  msg.textContent="";load(t);section=-1;level=0;save();render();
+  document.getElementById("editor").open=false;
+};
+document.getElementById("restore").onclick=()=>{src.value=DEFAULT_MD;msg.textContent="";};
+const mdRow=document.getElementById("modes");
+MODES.forEach(([v,n])=>{
+  const b=document.createElement("button");b.className="pill";b.textContent=n;b.dataset.v=v;
+  b.onclick=()=>{mode=v;save();render();};mdRow.appendChild(b);
+});
+const lvRow=document.getElementById("levels");
+LEVELS.forEach(([,n],i)=>{
+  const b=document.createElement("button");b.className="pill";b.textContent=n;b.dataset.v=i;
+  b.onclick=()=>{level=i;save();render();};lvRow.appendChild(b);
+});
+document.getElementById("check").onclick=check;
+document.getElementById("reveal").onclick=reveal;
+document.getElementById("next").onclick=render;
+load(md);render();
+</script>
+</body>
+</html>
