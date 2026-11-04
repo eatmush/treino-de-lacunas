@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Treino de lacunas</title>
-<meta name="description" content="Cole um texto em Markdown e preencha as lacunas para decorar. A cada rodada, as palavras escondidas mudam.">
+<meta name="description" content="Cole um texto e preencha as lacunas para decorar. A cada rodada, as palavras escondidas mudam.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -106,12 +106,12 @@ button:focus-visible,.pill:focus-visible,summary:focus-visible{outline:3px solid
 <main>
   <button class="theme" id="theme" type="button"></button>
   <h1>Treino de lacunas</h1>
-  <p class="sub">Cole um texto em Markdown, escolha quanto esconder e preencha as lacunas. A cada rodada as palavras escondidas mudam, sempre na porcentagem escolhida.</p>
+  <p class="sub">Cole um texto, escolha quanto esconder e preencha as lacunas. A cada rodada as palavras escondidas mudam, sempre na porcentagem escolhida.</p>
 
   <details class="editor" id="editor">
     <summary>Texto para decorar</summary>
-    <p>Aceita parágrafos, **negrito**, *itálico*, `código`, blocos ``` de código, tabelas com |, listas, citações com &gt; e títulos com #. Títulos dividem o texto em trechos; sem títulos, ele é dividido em partes de tamanho parecido.</p>
-    <textarea id="src" spellcheck="false" aria-label="Texto em Markdown"></textarea>
+    <p>Aceita Markdown: parágrafos, **negrito**, *itálico*, `código`, blocos ``` de código, tabelas com |, listas, citações com &gt; e títulos com #. Títulos dividem o texto em trechos; sem títulos, ele é dividido em partes de tamanho parecido.</p>
+    <textarea id="src" spellcheck="false" aria-label="Texto para decorar"></textarea>
     <div class="edit-actions">
       <button class="main" id="use">Usar este texto</button>
       <button class="ghost" id="restore">Restaurar exemplo</button>
